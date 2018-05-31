@@ -27,41 +27,47 @@ Realizar configuraciones sobre sistemas operativos para el acceso a servicios (n
 
 ## Aproviosionamiento básico de máquina virtual: se instala el sistema operativo Ubuntu 16.04.4, se configura las interfaces de red, y se asignan 4 núcleos.
 
-* La instalación de Ubuntu se realiza sobre la herramienta VirtualBox. Después de terminar el proceso de instalación, se obtiene como resultado la creación exitosa de la máquina virtual y luego se configuran las interfaces de red.
+* La instalación de Ubuntu 16.04 que se encuentra en: http://releases.ubuntu.com/16.04/ se realiza sobre la herramienta VirtualBox.  
 
+Con la siguiente configuración en los núcleos:
+![](imagenes/nucleosCPU.png)
+
+y la siguiente configuración de red:
+![](imagenes/configuracionRed.png)  
+
+Que terminará con un proceso exitoso en la instalación y configuración.  
+
+**NOTA:** no olvides instalar ssh y activar el servidor.
 
 
 ## Instalación de LXC/LXD con permisos para el usuario operativos.
 
 * Después de completar la instalación del sistema operativo ubuntu y crear el usuario de operativos.
 
-Se ejecuta el comando
+Se ejecuta el comando: para instalar hypervisor LXD.
 
-```$ sudo apt install lxd lxd-client```
-
-para instalar hypervisor LXD, es un administrador de contenedores de linux, complemento que facilita el uso de contenedores por medio de comandos simples.  
-
-
-
-
-* Tambien se instala el paquete de bridge-utils que contiene una utilidad necesaria para crear y administrar interfaces bridge. Para instalar este paquete se corre el siguiente comando.
-
+```Console  
+$ sudo apt install lxd lxd-client
 ```
+
+Hypervisor LXD es un administrador de contenedores de linux. Complemento que facilita el uso de contenedores por medio de comandos simples.  
+
+* Tambien se instala el paquete de bridge-utils que contiene una utilidad necesaria para crear y administrar interfaces bridge. Para instalar este paquete se corre el siguiente comando:
+
+```Console
 $ sudo apt-get install bridge-utils
 ```
 
 * Finalmente se instala **zfsutils-linux** que sirve para administrar los contenedores. Este paquete se instala con el siguiente comando.
 
-```
+```Console
 $ sudo apt-get install zfsutils-linux
 ```
 
 ### ¿Qué es un storage pool?
 
-El **storage pool** (grupo de almacenamiento) es un conjunto de discos en un entorno de almacenamiento compartido, y que trabajen como un solo para el sistema. Las agrupaciones de almacenamiento pueden configurarse en diferentes tamaños y proporcionar una serie de beneficios, que incluyen mejoras de rendimiento, administración y proteccion de datos. Las agrupaciones pueden aprovisionarse para incluir cualquier cantidad de capacidad y utilizar cualquier combinación de espacio de almacenamiento físico en una red de area de almacenamiento(SAN). En entornos de servidor virtual, las máquinas virtuales (VM) se pueden almacenar en grupos dedicados, lo que garantiza que las máquinas virtuales críticas tengan acceso a la cantidad adecuada de almacenamiento.
+El **storage pool** (grupo de almacenamiento) es un conjunto de discos en un entorno de almacenamiento compartido, y que trabajen como un solo para el sistema. Las agrupaciones de almacenamiento pueden configurarse en diferentes tamaños y proporcionar una serie de beneficios, que incluyen mejoras de rendimiento, administración y proteccion de datos. Las agrupaciones pueden aprovisionarse para incluir cualquier cantidad de capacidad y utilizar cualquier combinación de espacio de almacenamiento físico en una red de area de almacenamiento(SAN). En entornos de servidor virtual, las máquinas virtuales (VM) se pueden almacenar en grupos dedicados, lo que garantiza que las máquinas virtuales críticas tengan acceso a la cantidad adecuada de almacenamiento[1].
 
-
-https://searchservervirtualization.techtarget.com/definition/storage-pools
 
 
 ### ¿Qué es ZFS y cuáles son sus ventajas?
@@ -75,28 +81,48 @@ Esta característica permite que los archivos se mantengan correctamente, siendo
 
   * Depuración: ZFS puede programarse para realizar un "scrub" sobre todos los datos en un pool de almacenamiento, verificando cada dato con su suma de comprobación correspondiente para verificar su integridad, detectar cualquier corrupción de datos silenciosos y corregir cualquier error donde sea posible.
 Cuando los datos se almacenan de forma redundante, en una matriz espejada o de tipo RAID, se pueden autorreparar automáticamente y sin intervención del administrador. Dado que se registran daños en los datos, ZFS puede sacar a la luz los defectos en los módulos de memoria (u otro hardware) que hacen que los datos se almacenen en los discos duros de forma incorrecta.
+
 La depuración tiene una prioridad baja de E / S, por lo que tiene un efecto mínimo en el rendimiento del sistema y puede funcionar mientras se usa el grupo de almacenamiento.
 
   * Snapshots: Son copias del sistema de archivo de fácil creación, permitiendo hacer respaldo de la información o copias de seguridad de forma casi inmediata, con la característica de que son sólo de lectura.
 
   * Clones: También se pueden crear instantáneas grabables ("clones"), lo que da como resultado dos sistemas de archivos independientes que comparten un conjunto de bloques. A medida que se realizan cambios en cualquiera de los sistemas de archivos clonados, se crean nuevos bloques de datos para reflejar esos cambios, pero todos los bloques sin cambios se continúan compartiendo, sin importar cuántos clones existan. Esto es posible debido al diseño de copiado sobre escritura.
 
-  * Envío y recepción de Snapshots:Los Snapshots de los sistemas de archivos ZFS y los volúmenes se pueden enviar a hosts remotos a través de la red. Esta secuencia de datos puede ser un sistema de archivos completo o un volumen, o puede ser los cambios desde la última vez que se envió. Al enviar solo los cambios, el tamaño del flujo depende del número de bloques cambiados entre las instantáneas. Esto proporciona una estrategia muy eficiente para sincronizar copias de seguridad.
-
-http://www.zeta.systems/zetavault/what-is-zfs/
-
-
-
+  * Envío y recepción de Snapshots:Los Snapshots de los sistemas de archivos ZFS y los volúmenes se pueden enviar a hosts remotos a través de la red. Esta secuencia de datos puede ser un sistema de archivos completo o un volumen, o puede ser los cambios desde la última vez que se envió. Al enviar solo los cambios, el tamaño del flujo depende del número de bloques cambiados entre las instantáneas. Esto proporciona una estrategia muy eficiente para sincronizar copias de seguridad.[2]
 
 * Para la configuración del puente LXD (LXD bridge configuration), por medio del cual, los contenedores se van a comunicar con el host y posteriormente con la internet. Se procede a ejecutar el siguiente comando.
 
 ```
 $ sudo lxd init
 ```
-Con el cual se configura la inicialización de los contenedores, como se puede ver en las imágenes.
 
- ![](imagenes/Imagen de bridge.PNG)
+Con el cual se configura la inicialización de los contenedores, como se puede ver en las siguientes imágenes.  
 
+PASO 1 e indicar **SI**:
+ ![](imagenes/configuracionBrigde1.png)  
+ PASO 2 se selecciona el nombre de la interfaz:  
+ ![](imagenes/Brigde2.png)  
+ PASO 3 se indica **SI** para proveer la IPV4:  
+ ![](imagenes/brigde4.png)  
+ PASO 4 se seleciona la siguiente dirección IPV4:  
+ ![](imagenes/brigde41.png)  
+ PASO 5:  
+ ![](imagenes/brigde5.png)  
+ PASO 6 se provee el primer DHCP:  
+ ![](imagenes/brigde6.png)    
+ PASO 7 se provee el último DHCP:  
+ ![](imagenes/brigde7.png)    
+ PASO 8 se provee el número de clientes para el  DHCP:    
+ ![](imagenes/brigde8.png)   
+ PASO 9 se slecciona el protoclo de IPV4:    
+ ![](imagenes/brigde9.png)  
+ PASO 10 al protocolo de IPV6 no se selecciona:      
+ ![](imagenes/bride10.png)  
+ Finalmente se puede observar en la imagen siguiente que se ha configurado exitosamente el contenedor:  
+ ![](imagenes/brigde11.png) 
+ 
+ 
+ 
 
 
 Al indicarle **Yes** se abre la ventana de configuración de lxd
@@ -274,4 +300,9 @@ lxc config set webserver1 limits.memory 128MB
 ```Console
 lxc config set webserver2 limits.memory 128MB
 ```  
+
+## REFERENCIAS
+[1] https://searchservervirtualization.techtarget.com/definition/storage-pools
+[2] http://www.zeta.systems/zetavault/what-is-zfs/
+
 
