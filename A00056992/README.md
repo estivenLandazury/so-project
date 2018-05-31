@@ -71,7 +71,7 @@ Ahora se agrega el usuario operativos al grupo de sudoers para que permita usar 
 ```
 usermod -aG sudo operativos   
 ```  
-Después se agrega el  usuario operativos al grupo lxd, luego se reloguea a la sesion operativos para que se actualize el grupo.  
+Después se agrega el  usuario operativos al grupo lxd, luego se reloguea a la sesión operativos para que se actualize el grupo.  
 ```
 sudo usermod --append --groups lxd operativos
 ``` 
@@ -280,7 +280,7 @@ Para realizar las pruebas de stress utilizamos la herramienta siege, la cual se 
 
 **configuración y pruebas de stress:**  
 
-** Servidores web con 64MB de memoria RAM y CPU 50%**
+**Servidores web con 64MB de memoria RAM y CPU 50%**
 * Para configurar la memoria RAM de los contenedores web a 64MB y la CPU al 50%, ejecutamos los siguientes  
  comandos:    
 ```
@@ -303,7 +303,7 @@ siege -c 100 -t 30s http://10.74.216.106/
 
 **Pruebas de estrés servidores web con 128MB de memoria RAM y CPU 100%**  
 
-** Servidores web con 128MB de memoria RAM y CPU 100%**  
+**Servidores web con 128MB de memoria RAM y CPU 100%**  
 * Para configurar la memoria RAM de los contenedores web a 128MB y la CPU al 100%, ejecutamos los siguientes  
  comandos:  
 
@@ -324,11 +324,11 @@ siege -c 100 -t 30s http://10.74.216.106/
 ```      
 ![](imagenes/pruebasVer2_2.png)      
 
-Acontinuación en la siguiente imagen se pueden evidenciar los cambios correspondientes que se realizaron anteriormente al server1 y server2 para RAM de 64MB y CPU al 50%:  
+Acontinuación en la siguiente imagen se pueden evidenciar los cambios correspondientes al server1 y server2 para RAM de 64MB y CPU al 50%:  
 
 ![](imagenes/cambiosVer1.png)  
 
-Acontinuación en la siguiente imagen se pueden evidenciar los cambios correspondientes que se realizaron anteriormente al server1 y server2 para RAM de 128MB y CPU al 100%:  
+Acontinuación en la siguiente imagen se pueden evidenciar los cambios correspondientes al server1 y server2 para RAM de 128MB y CPU al 100%:  
 ![](imagenes/cambiosVer2.png)    
 
 ## Configure el reenvio de puertos en la máquina virtual para permitir el acceso desde el sistema anfitrión hacia del contenedor con el servicio para balanceo de carga.
