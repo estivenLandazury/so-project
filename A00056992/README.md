@@ -25,7 +25,7 @@ Virtualizar servicios empleando contenedores LXC/LXD
 Realizar configuraciones sobre sistemas operativos para el acceso a servicios (network, load balancing)
 
 
-## Aproviosionamiento básico de máquina virtual: se instala el sistema operativo Ubuntu 16.04.4, se configura las interfaces de red, y se asignan 4 núcleos.
+## Aprovisionamiento básico de máquina virtual: se instala el sistema operativo Ubuntu 16.04.4, se configura las interfaces de red, y se asignan 4 núcleos.
 
 * La instalación de Ubuntu 16.04 que se encuentra en: http://releases.ubuntu.com/16.04/ se realiza sobre la herramienta VirtualBox.  
 
@@ -118,17 +118,17 @@ PASO 1 e indicar **SI**:
  ![](imagenes/brigde4.png)  
  PASO 4 se asigna la siguiente dirección IPV4:    
  ![](imagenes/brigde41.png)  
- PASO 5: se provee el numero de mascar de red, para delimitar el ambito de red:  
+ PASO 5: se provee el numero de mascar de red, para delimitar el ámbito de red:  
  ![](imagenes/brigde5.png)  
- PASO 6 se provee el primer DHCP que permite configurar la red de manera dinámica, es decir sin una intervencón especial:    
+ PASO 6 se provee el primer DHCP que permite configurar la red de manera dinámica, es decir sin una intervención especial:    
  ![](imagenes/brigde6.png)    
  PASO 7 se provee el último DHCP:  
  ![](imagenes/brigde7.png)    
  PASO 8 se provee el número de clientes para el  DHCP:     
  ![](imagenes/brigde8.png)   
- PASO 9 se slecciona que si se desea NAT para el protocolo IPV4 para el intercambio de paquetes entre redes:      
+ PASO 9 se slecciona que si se desea NAT para el protocólo IPV4 para el intercambio de paquetes entre redes:      
  ![](imagenes/brigde9.png)  
- PASO 10 el protocolo de IPV6 no se selecciona:        
+ PASO 10 el protocólo de IPV6 no se selecciona:        
  ![](imagenes/bride10.png)  
  Finalmente se puede observar en la imagen siguiente que se ha configurado exitosamente el contenedor:  
  ![](imagenes/brigde11.png)    
@@ -170,7 +170,7 @@ Y allí se instala **Nginx** para relizar la configuración.
 ``` $ sudo apt-get update ```
 ```$ sudo apt-get install nginx```
 
-Al terminar la configuraciòn de los dos servidores web (con los tres comandos anteriores), usamos el siguiente comando:
+Al terminar la configuración de los dos servidores web (con los tres comandos anteriores), usamos el siguiente comando:
 
 ```Console  
 sudo vi /var/www/html/index.nginx-debian.html  
@@ -280,8 +280,6 @@ Para realizar las pruebas de stress utilizamos la herramienta siege, la cual se 
 
 **configuración y pruebas de stress:**  
 
-
-
 ** Servidores web con 64MB de memoria RAM y CPU 50%**
 * Para configurar la memoria RAM de los contenedores web a 64MB y la CPU al 50%, ejecutamos los siguientes  
  comandos:    
@@ -331,10 +329,7 @@ Acontinuación en la siguiente imagen se pueden evidenciar los cambios correspon
 ![](imagenes/cambiosVer1.png)  
 
 Acontinuación en la siguiente imagen se pueden evidenciar los cambios correspondientes que se realizaron anteriormente al server1 y server2 para RAM de 128MB y CPU al 100%:  
-![](imagenes/cambiosVer2.png)  
-
-
-* Podemos observar que se reduce que la concurrencia y el throughput con el resultado anterior disminuye  
+![](imagenes/cambiosVer2.png)    
 
 ## Configure el reenvio de puertos en la máquina virtual para permitir el acceso desde el sistema anfitrión hacia del contenedor con el servicio para balanceo de carga.
 
