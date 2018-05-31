@@ -336,6 +336,30 @@ Acontinuación en la siguiente imagen se pueden evidenciar los cambios correspon
 
 * Podemos observar que se reduce que la concurrencia y el throughput con el resultado anterior disminuye  
 
+## Configure el reenvio de puertos en la máquina virtual para permitir el acceso desde el sistema anfitrión hacia del contenedor con el servicio para balanceo de carga.
+
+* Para este punto hay que correr los siguientes comandos:
+
+Para declarar la dirección ip pública y la del contenedor que tiene el balanceador de cargas, además de especificar algú puerto:  
+
+```
+PORT=80 PUBLIC_IP=192.168.131.80 CONTAINER_IP=10.74.216.106 \
+```
+Luego se configuran las iptables  
+
+```
+sudo iptables -t nat -I PREROUTING -i enp0s9 -p TCP -d $PUBLIC_IP --dport $PORT -j DNAT --to-destination $CONTAINER_IP:$PORT -m comment --comment "forward to the Nginx container"  
+```
+
+Por último podemos ingresar a la dirección ip pública, en este caso la: 192.168.131.80:80  
+
+Cada vez que se recargue aparecerá un servidor diferente:  
+
+![](imagenes/ultimo1.png)  
+
+![](imagenes/ultimo2.png)
+
+## OPCIONALES
 
 
 ## REFERENCIAS
