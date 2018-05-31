@@ -134,17 +134,36 @@ PASO 1 e indicar **SI**:
  ![](imagenes/brigde11.png)    
  
 ## Creación de contenedores con servicio web (dos contenedores web)
-* Para crear los contenedor web ejecutamos el comando.
+* Para crear los contenedores web ejecutamos los siguientes comandos:
 
-```
+Para el servidor1:
+```Console
 $ lxc launch ubuntu:16.04 server1
+```
+Para el servidor2:  
+
+```Console  
 $ lxc launch ubuntu:16.04 server2
 ```
+Y para el balanceador de cargas:  
+
+```Console  
+$ lxc launch ubuntu:16.04 balancelanda
+```
+Luego podremos verlo con el comando:  
+
+```Console
+$ lxc list
+```  
+![](imagenes/listngins.png)
 
 * Al ser la primera vez que se crea un contenedor en la máquina, el comando también descarga una imagen de ubuntu 16.04, que puede ser utilizada como plantilla para otros contenedores.
+
 Una vez creados los contenedoresweb se ingresa a cada uno de estos para configurar el servidor
 
-``` $ lxc exec webserver -- sudo --login --user server1 ```
+```Console  
+$ lxc exec server1 -- /bin/bash  
+```
 
 Ingresamos al Shell del servidor a configurar y allí se instala **Nginx** para relizar la configuración 
 
@@ -295,7 +314,7 @@ lxc config set webserver2 limits.memory 128MB
 ```  
 
 ## REFERENCIAS
-[1] https://searchservervirtualization.techtarget.com/definition/storage-pools
+[1] https://searchservervirtualization.techtarget.com/definition/storage-pools  
 [2] http://www.zeta.systems/zetavault/what-is-zfs/
 
 
