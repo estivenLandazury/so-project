@@ -18,7 +18,7 @@
 **Repositorio GitHub:** https://github.com/estivenLandazury/so-project/tree/so-project  
 
 
-##Objetivos
+## Objetivos
 
 Conocer las caracteristicas principales de la virtualización por medio de contenedores LXC/LXD
 Virtualizar servicios empleando contenedores LXC/LXD
@@ -44,6 +44,10 @@ Que terminará con un proceso exitoso en la instalación y configuración.
 
 * Después de completar la instalación del sistema operativo ubuntu y crear el usuario de operativos.
 
+ 
+
+
+
 Se ejecuta el comando: para instalar hypervisor LXD.
 
 ```Console  
@@ -63,6 +67,14 @@ $ sudo apt-get install bridge-utils
 ```Console
 $ sudo apt-get install zfsutils-linux
 ```
+Ahora se agrega el usuario operativos al grupo de sudoers para que permita usar sudo al usuario operativos. LXC viene instalado previamente en Ubuntu.  
+```
+usermod -aG sudo operativos   
+```  
+Después se agrega el  usuario operativos al grupo lxd, luego se reloguea a la sesion operativos para que se actualize el grupo.  
+```
+sudo usermod --append --groups lxd operativos
+``` 
 
 ### ¿Qué es un storage pool?
 
@@ -100,46 +112,27 @@ Con el cual se configura la inicialización de los contenedores, como se puede v
 
 PASO 1 e indicar **SI**:
  ![](imagenes/configuracionBrigde1.png)  
- PASO 2 se selecciona el nombre de la interfaz:  
+ PASO 2 se selecciona el nombre de la interfaz:    
  ![](imagenes/Brigde2.png)  
- PASO 3 se indica **SI** para proveer la IPV4:  
+ PASO 3 se indica **SI** para proveer la IPV4 para la conexión con otra redes:    
  ![](imagenes/brigde4.png)  
- PASO 4 se seleciona la siguiente dirección IPV4:  
+ PASO 4 se asigna la siguiente dirección IPV4:    
  ![](imagenes/brigde41.png)  
- PASO 5:  
+ PASO 5: se provee el numero de mascar de red, para delimitar el ambito de red:  
  ![](imagenes/brigde5.png)  
- PASO 6 se provee el primer DHCP:  
+ PASO 6 se provee el primer DHCP que permite configurar la red de manera dinámica, es decir sin una intervencón especial:    
  ![](imagenes/brigde6.png)    
  PASO 7 se provee el último DHCP:  
  ![](imagenes/brigde7.png)    
- PASO 8 se provee el número de clientes para el  DHCP:    
+ PASO 8 se provee el número de clientes para el  DHCP:     
  ![](imagenes/brigde8.png)   
- PASO 9 se slecciona el protoclo de IPV4:    
+ PASO 9 se slecciona que si se desea NAT para el protocolo IPV4 para el intercambio de paquetes entre redes:      
  ![](imagenes/brigde9.png)  
- PASO 10 al protocolo de IPV6 no se selecciona:      
+ PASO 10 el protocolo de IPV6 no se selecciona:        
  ![](imagenes/bride10.png)  
  Finalmente se puede observar en la imagen siguiente que se ha configurado exitosamente el contenedor:  
- ![](imagenes/brigde11.png) 
+ ![](imagenes/brigde11.png)    
  
- 
- 
-
-
-Al indicarle **Yes** se abre la ventana de configuración de lxd
-imagen1
-imagen2
-imagen3
-imagen4
-imagen5
-imagen6
-imagen7
-imagen8
-
-Al final de este proceso podemos observar en la captura de pantalla que la configuración fue exitosa
-
-imagen …..
-
-
 ## Creación de contenedores con servicio web (dos contenedores web)
 * Para crear los contenedor web ejecutamos el comando.
 
