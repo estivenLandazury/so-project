@@ -264,87 +264,79 @@ Usando systemctl:
 ![](imagenes/systemctl.png)
 
 
-## Pruebas del funcionamiento del balanceador
+## Pruebas del funcionamiento del balanceador  
 
-Por medio del comando curl se hacen las peticiones a cada uno de los servicios web a través del balanceador, como se puede visualizar en la siguiente imagen:
+Por medio del comando curl se hacen las peticiones a cada uno de los servicios web a través del balanceador, como se puede visualizar en la siguiente imagen:  
 
-Curl server1 y server2:  
-![](imagenes/curlTodos.png)  
+Curl server1 y server2:    
+![](imagenes/curlTodos.png)    
 
-Curl balanceador de cargas:  
-![](imagenes/curlBalanceCarga.png)
+Curl balanceador de cargas:    
+![](imagenes/curlBalanceCarga.png)  
 
-Para realizar las pruebas de stress utilizamos la herramienta siege, la cual se instala de:
+Para realizar las pruebas de stress utilizamos la herramienta siege, la cual se instala de:  
 
-``` wget http://download.joedog.org/siege/siege-latest.tar.gz ```  
+``` wget http://download.joedog.org/siege/siege-latest.tar.gz ```    
 
-**Configuración de los servidores:**
+**configuración y pruebas de stress:**  
 
- servidores web con uso de CPU al 50%
-* Para modificar el porcentaje de CPU vamos a ejecutar los siguientes comandos.
 
-```lxc config set webserver1 limits.cpu.allowance 50%```
 
+** Servidores web con 64MB de memoria RAM y CPU 50%**
+* Para configurar la memoria RAM de los contenedores web a 64MB y la CPU al 50%, ejecutamos los siguientes  
+ comandos:    
 ```
-lxc config set webserver2 limits.cpu.allowance 50%
-```
-
-* Por medio de siege ejecutamos el siguiente comando, el cual asigna una concurrencia de 255 usuarios.
-
-```
-siege -c 255 10.60.248.59 --reps=1
-```
-
-* En el comando anterior indicamos la IP de nuestro balanceador de carga para que apunte a dicho contenedor.
-
-* A continuación, se muestra el resultado de las pruebas.
-
-![](imgs/ps/captura_1.PNG)
-
-** servidores web con uso de CPU al 100%**
-
-* Para poner la cpu de los servidores al 100%, ejecutaremos:
-
-```
-lxc config set server1 limits.cpu.allowance 100%
-```
-
-```
-lxc config set server2 limits.cpu.allowance 100%
-```
-
-* Ahora volveremos a ejeutar el mismo comando de siege para ejecutar las pruebas de estrés. El resultado de las pruebas es el siguiente.
-
-![](imgs/ps/captura_2.PNG)
-
-* Podemos observar que se reduce que la concurrencia y el throughput con el resultado anterior disminuye
-
-** Servidores web con 64MB de memoria RAM**
-* Para configurar la memoria RAM de los contenedores web a 64MB, ejecutamos:
-
-```
-lxc config set server1 limits.memory 64MB
-```
-
-```
-lxc config set server2 limits.memory 64MB
-```
-
-* Luego, usando el mismo comando para pruebas de estrés, ejecutaremos las mismas pruebas usando la utilidad siege. A continuación, se muestra el resultado de las pruebas.
-
-![](imgs/ps/captura_3.PNG)
-
-**Pruebas de estrés servidores web con 128MB de memoria RAM**
-
-* Ejecutamos los siguientes comando para modificar el límte de memoria RAM utilizada por ambos servidores web a 128MB.
-
-```Console
-lxc config set webserver1 limits.memory 128MB
-```
-
-```Console
-lxc config set webserver2 limits.memory 128MB
+lxc config set server1 limits.memory 64MB  
+lxc config set server2 limits.memory 64MB  
+lxc config set server1 limits.cpu.allowance 50%  
+lxc config set server2 limits.cpu.allowance 50%  
 ```  
+se muestra el resultado de las pruebas.    
+```  
+ab -n 1000 -c 100 http://10.225.138.207/  
+```
+![](imagenes/pruebasVer1_1.png)    
+
+``` 
+siege -c 100 -t 30s http://10.74.216.106/    
+```      
+![](imagenes/pruebasVer1_2.png)    
+
+
+**Pruebas de estrés servidores web con 128MB de memoria RAM y CPU 100%**  
+
+** Servidores web con 128MB de memoria RAM y CPU 100%**  
+* Para configurar la memoria RAM de los contenedores web a 128MB y la CPU al 100%, ejecutamos los siguientes  
+ comandos:  
+
+ ```
+lxc config set server1 limits.memory 128MB
+lxc config set server2 limits.memory 128MB
+lxc config set server1 limits.cpu.allowance 100%
+lxc config set server2 limits.cpu.allowance 100%
+```  
+se muestra el resultado de las pruebas.      
+```  
+ab -n 1000 -c 100 http://10.225.138.207/    
+```
+![](imagenes/pruebasVer2_1.png)      
+
+``` 
+siege -c 100 -t 30s http://10.74.216.106/      
+```      
+![](imagenes/pruebasVer2_2.png)      
+
+Acontinuación en la siguiente imagen se pueden evidenciar los cambios correspondientes que se realizaron anteriormente al server1 y server2 para RAM de 64MB y CPU al 50%:  
+
+![](imagenes/cambiosVer1.png)  
+
+Acontinuación en la siguiente imagen se pueden evidenciar los cambios correspondientes que se realizaron anteriormente al server1 y server2 para RAM de 128MB y CPU al 100%:  
+![](imagenes/cambiosVer2.png)  
+
+
+* Podemos observar que se reduce que la concurrencia y el throughput con el resultado anterior disminuye  
+
+
 
 ## REFERENCIAS
 [1] https://searchservervirtualization.techtarget.com/definition/storage-pools  
