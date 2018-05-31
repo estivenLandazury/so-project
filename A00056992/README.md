@@ -159,49 +159,74 @@ $ lxc list
 
 * Al ser la primera vez que se crea un contenedor en la máquina, el comando también descarga una imagen de ubuntu 16.04, que puede ser utilizada como plantilla para otros contenedores.
 
-Una vez creados los contenedoresweb se ingresa a cada uno de estos para configurar el servidor
+Una vez creados los contenedoresweb se ingresa a cada uno de estos para configurar el servidor ingresando al shell del servidor con el siguiente comando:
 
 ```Console  
 $ lxc exec server1 -- /bin/bash  
 ```
 
-Ingresamos al Shell del servidor a configurar y allí se instala **Nginx** para relizar la configuración 
+Y allí se instala **Nginx** para relizar la configuración.
 
 ``` $ sudo apt-get update ```
 ```$ sudo apt-get install nginx```
 
-Al terminar la configuraciòn de los dos servidores web, nos dirigimos a la carpeta /var/www/html/ y se edita el archivo index.nginx-debian.html con los datos queremos vizualizar en la página principal cuando se acceda al servidor web.
+Al terminar la configuraciòn de los dos servidores web (con los tres comandos anteriores), usamos el siguiente comando:
 
-Imagen… servidor 1
-Imagen …Servidor 2
+```Console  
+sudo vi /var/www/html/index.nginx-debian.html  
+```
+Para editar el nombre del servidor e indentificarlos más fácil.
+
+![](imagenes/archivoServer1.png)
+ 
+Y de la misma forma el archivo para el server2. Se cambia el contenido para diferenciarlos. (ej: en vez de server1, server2)
 
 Para cumplir con la asignación de un procesador único para cada servicio web, se ejecutan los siguientes comandos:
-Para el servidor1
-``` $ lxc config set server1 limits.cpu 1´´
 
-Para el servidor2
-´´´$ lxc config set server2 limits.cpu 1 ´´
+Para el server1:  
+
+```   
+$ lxc config set server1 limits.cpu 1  
+```
+
+Para el server2:  
+
+```  
+$ lxc config set server2 limits.cpu 1   
+```
 
 
 
-## Balanceador de carga
-Se crea el balanceador por medio del comando 
-``` $ lxc launch ubuntu:x loadBalancer ```
-Se accede a este por medio del Shell para configurarlo, con el comando  ``` $ lxc exec webserver -- sudo --login --user  nombre del balanceador
+## Balanceador de carga  
+
+En el punto anterior se creó el balanceador de cargas con nombre **balancelanda** que se puede evidenciar en la imagen del comando lxc list.  
+
+Luego, se accede a este por medio del Shell para configurarlo, con el comando:
+
+```
+$ lxc exec balancelanda  
+```
+
 Aquí también se debe instalar Nginx y se configura como balanceador de carga editando el archivo
 
-```$ sudo nano /etc/nginx/conf.d/load-balancer.conf```
+```$ sudo nano /etc/nginx/conf.d/balanceLanda.conf```
 
 
-En este archivo se pone el siguiente contenido
+En este archivo se escribe el siguiente contenido
 
-´´upstream backend {
+```  
+ Define which servers to include in the load balancing scheme. 
+# It's best to use the servers' private IPs for better performance and security.
+# You can find the private IPs at your UpCloud Control Panel Network section.
+
+upstream backend {
    least_conn;
-   server 10.60.248.73; cambiar
-   server 10.60.248.86; cambiar
+   server 10.74.216.67; 
+   server 10.74.216.135;
 }
 
-
+# This server accepts all traffic to port 80 and passes it to the upstream. 
+# Notice that the upstream name and the proxy_pass need to match.
 
 server {
    listen 80; 
@@ -211,41 +236,49 @@ server {
    }
 }
 
-Lo que se configuro aquí fue el bloque de servidores a los cuales llegaran las peticiones. Con el comando ´´least conn´´ se balancea la carga para los dos servidores. Se guarda el archivo.
+```
 
-Debemos eliminar la carpeta que aloja sitios web, para que, cuando lleguen las solicitudes al balanceador no retorne la pagina html, sino que pasen a los servidores. Adicionalmente el servicio nginx se debe reiniciar, asi el balanceador funcionara correctamente.
-´´ $ sudo rm /etc/nginx/sites-enabled/default´´
+Lo que se configuro aquí fue el bloque de servidores a los cuales llegaran las peticiones. Con el método **least_conn** se balancea la carga para los dos servidores.
 
-´´ $ sudo service nginx restart´´
-Imagen si la hay…
+* Luego, debemos eliminar la carpeta que aloja sitios web, para que, cuando lleguen las solicitudes al balanceador no retorne la pagina html, sino que pasen a los servidores. 
 
-
-**Configuración del balanceador para recibir conexiones remotas: ** Para esto se debe alterar la iptable, que es la que permite el intercambio de tráfico entre el http del host y el balanceador de carga.
-
-´´sudo iptables -t nat -A PREROUTING -p tcp -m conntrack --ctstate NEW --dport 80 -j DNAT --to-destination 10.60.248.59:80´´
+```$ sudo rm /etc/nginx/sites-enabled/default```
 
 
+Adicionalmente el servicio nginx se debe reiniciar, asi el balanceador funcionara correctamente.
 
-**Validación de que el servicio para conexión remota y el balanceador están activos**
 
-Imagen 
+```$ sudo service nginx restart```
 
-**Salida del comando lxc list con los contenedores creados y sus direcciones IP **
-Imagen 
+
+**Configuración del balanceador para recibir conexiones remotas:** Para esto se debe alterar la iptable, que es la que permite el intercambio de tráfico entre el http del host y el balanceador de carga.
+
+```sudo iptables -t nat -A PREROUTING -p tcp -m conntrack --ctstate NEW --dport 80 -j DNAT --to-destination 10.74.216.106:80```
+
+
+**Validación del servicio para conexión remota y el balanceador están activos**
+
+![](imagenes/statusBalanceador.png)
+
+Usando systemctl:  
+![](imagenes/systemctl.png)
+
 
 ## Pruebas del funcionamiento del balanceador
 
 Por medio del comando curl se hacen las peticiones a cada uno de los servicios web a través del balanceador, como se puede visualizar en la siguiente imagen:
 
-Imagen 
+Curl server1 y server2:  
+![](imagenes/curlTodos.png)  
+
+Curl balanceador de cargas:  
+![](imagenes/curlBalanceCarga.png)
+
 Para realizar las pruebas de stress utilizamos la herramienta siege, la cual se instala de:
 
+``` wget http://download.joedog.org/siege/siege-latest.tar.gz ```  
 
-``` wget http://download.joedog.org/siege/siege-latest.tar.gz ```
-
-
-
-** Configuración de los servidores:***
+**Configuración de los servidores:**
 
  servidores web con uso de CPU al 50%
 * Para modificar el porcentaje de CPU vamos a ejecutar los siguientes comandos.
