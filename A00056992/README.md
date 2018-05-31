@@ -354,8 +354,17 @@ Cada vez que se recargue aparecerá un servidor diferente:
 
 ![](imagenes/ultimo2.png)
 
-## OPCIONALES
+## OPCIONAL
+**pregunta RANDOM**
 
+Antes de reiniciar se detuvo el server2 con el siguiente comando:
+
+```Consola  
+lxc server2 stop  
+```
+
+Al reiniciar la máquina queda igual que quedó antes de haberla reiniciado con el server1 en RUNNING y el server2 STOPPED
+![](imagenes/random.png)
 
 ## REFERENCIAS
 [1] https://searchservervirtualization.techtarget.com/definition/storage-pools  
